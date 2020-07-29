@@ -1,0 +1,11 @@
+{
+  "name": "project-terra",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Marcus <marcus@valnet.xyz>",
+  "license": "MIT",
+  "dependencies": {
+    "signale": "^1.4.0",
+    "ws": "^7.3.1"
+  }
+}
