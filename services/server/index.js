@@ -2,22 +2,10 @@ const { Server } = require('ws');
 const { World } = require('./World');
 const log = require('signale');
 
-function start(config) {
-
-	server.on('connection', function connection(ws) {
-		ws.on('message', function incoming(message) {
-			console.log('received: %s', message);
-		});
-
-		ws.send('something');
-	});
-
-	console.log('server');
-}
-
 class TerraServer {
 	wss = null;
 	world = null;
+	clients = [];
 
 	constructor(options = {}) {
 		log.info('starting terra server with', options);
@@ -30,11 +18,32 @@ class TerraServer {
 		this.world = new World();
 	}
 
-	connectClient(client) {
-		
+	connectClient(client, req) {
+		client.ip = req.socket.remoteAddress;
+		log.debug('client connected', client.ip);
+		this.clients.push(client);
+		client.on('message', (message) => {
+			this.processMessage(message, client);
+		});
+		this.wss.on('close', this.pruneClients.bind(this));
+	}
+
+	pruneClients() {
+		this.clients = this.clients.filter(client => {
+			if(!client.isAlive) log.debug('killed client', client);
+			return client.isAlive;
+		})
+	}
+
+	broadcast(message) {
+		for(const client of this.clients) {
+			client.send(message);
+		}
+	}
+
+	processMessage(message, client) {
+
 	}
 }
 
-const terraServer = new TerraServer()
-
-module.exports.start = start;
+const terraServer = new TerraServer();
