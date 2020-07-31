@@ -19,6 +19,7 @@ export class Menu extends Scene {
 
 		const textBox = new TextBox(400, 250);
 		this.add(textBox);
+		textBox.input = 'valnet.xyz'
 
 		const title = new Label();
 		title.pos.x = 400;
@@ -35,7 +36,9 @@ export class Menu extends Scene {
 		this.add(button);
 
 		button.on('click', () => {
-			console.log('clicked!');
+			this.emit('connect', {
+				host: textBox.input
+			})
 		})
 
 		engine.input.pointers.primary.on('down', (evt) => {

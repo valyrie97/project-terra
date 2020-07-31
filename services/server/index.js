@@ -42,7 +42,16 @@ class TerraServer {
 	}
 
 	processMessage(message, client) {
+		const obj = JSON.parse(message);
+		const response = this[obj.cmd](obj);
+		client.send(JSON.stringify(response));
+	}
 
+	GetChunk({x, y}) {
+		return {
+			cmd: 'chunk', 
+			data: this.world.getChunk(x, y)
+		}
 	}
 }
 

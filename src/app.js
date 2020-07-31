@@ -1,8 +1,12 @@
 //const WebSocket = require('ws');
 
 //const ws = new WebSocket('ws://valnet.xyz:5840');
-import * as ex from 'excalibur';
+import {
+	Color,
+	Engine
+} from 'excalibur';
 import { Menu } from './scenes/Menu'
+import { World } from './scenes/World'
 
 document.write(/*html*/`
 <style>
@@ -25,28 +29,37 @@ document.write(/*html*/`
 
 `);
 
-const game = new ex.Engine({
+const game = new Engine({
   // displayMode: ex.DisplayMode.Container,
   width: 800,
   height: 600,
-  backgroundColor: ex.Color.Black
+  backgroundColor: Color.Black
 });
 
 game.setAntialiasing(false);
 
-game.addScene('menu', new Menu(game));
+
+const world = new World(game)
+const menu = new Menu(game);
+
+menu.on('connect', (evt) => {
+	world.connect(evt.host);
+	game.goToScene('world');
+})
+
+
+
+game.addScene('menu', menu);
+game.addScene('world', world);
+
+
+
+
+
+
+
+
+
 
 game.start();
-
 game.goToScene('menu');
-
-// document.getElementById('buttonId').addEventListener('click', () => {
-// 	const textInput = document.getElementById('inputId').value;
-// 	console.log('Your value is:  '+textInput);
-	
-	
-// 	const socket = new WebSocket(`ws://${textInput}:5840`);
-	
-// 	console.log('We did it!');
-// 	//const socket = new WebSocket('ws://valnet.xyz:5840');
-// });
