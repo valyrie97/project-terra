@@ -18,8 +18,12 @@ export default class Button extends Actor {
 		this.focus = false;
 	}
 
+	update(engine, delta) {
+		super.update(engine, delta);
+	}
+
 	pointerup(evt) {
-		if(focus) this.emit('click', new GameEvent());
+		if(focus && this.scene.isCurrentScene()) this.emit('click', new GameEvent());
 		this.focus = false;
 	}
 
