@@ -1,11 +1,10 @@
 const SimplexNoiseGenerator = require('./lib/simplex').default;
 const seedrandom = require('seedrandom');
-
-const CHUNK_SIZE = 8;
-const CHUNK_HEIGHT = 32;
+const config = require('./../../globalConfig.json');
 
 module.exports.ChunkGenerator = class ChunkGenerator {
 	constructor(seed = Math.floor(Math.random() * 100000)) {
+		console.log('creating chunk gen with seed', seed);
 		const baseRng = seedrandom(seed);
 		this.rngs = [
 			seedrandom(Math.floor(baseRng() * 100000)),
@@ -51,18 +50,36 @@ module.exports.ChunkGenerator = class ChunkGenerator {
 	
 	getChunk(cx, cy) {
 		let chunk = [];
-		for(let z = 0; z < CHUNK_HEIGHT; z ++) {
-			let layer = [];
-			for(let x = 0; x < CHUNK_SIZE; x ++) {
-				let column = [];
-				for(let y = 0; y < CHUNK_SIZE; y ++) {
-					const height = this.getHeightAt(cx * CHUNK_SIZE + x, cy * CHUNK_SIZE + y);
-					if(height > z) column.push(1);
-					else column.push(0);
-				}
-				layer.push(column);
+		// console.log('chunk height', config.chunk.HEIGHT)
+		// for(let z = 0; z < config.chunk.HEIGHT; z ++) {
+		// 	let layer = [];
+		// 	for(let x = 0; x < config.chunk.SIZE; x ++) {
+		// 		let column = [];
+		// 		for(let y = 0; y < config.chunk.SIZE; y ++) {
+		// 			const height = this.getHeightAt(
+		// 				cx * config.chunk.SIZE + x,
+		// 				cy * config.chunk.SIZE + y
+		// 			);
+		// 			if(height > z) column.push(1);
+		// 			else column.push(0);
+		// 		}
+		// 		layer.push(column);
+		// 	}
+		// 	chunk.push(layer);
+		// }
+		
+		for(let y = 0; y < config.chunk.SIZE; y ++) {
+			let row = []
+			for(let x = 0; x < config.chunk.SIZE; x ++) {
+				const height = this.getHeightAt(
+					cx * config.chunk.SIZE + x,
+					cy * config.chunk.SIZE + y
+				);
+				const a = Math.min(7, Math.floor(height));
+				// console.log(a);
+				row.push(a);
 			}
-			chunk.push(layer);
+			chunk.push(row)
 		}
 		return chunk;
 	}

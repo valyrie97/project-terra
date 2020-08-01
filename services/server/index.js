@@ -49,7 +49,8 @@ class TerraServer {
 
 	GetChunk({x, y}) {
 		return {
-			cmd: 'chunk', 
+			cmd: 'chunk',
+			cx: x, cy: y,
 			data: this.world.getChunk(x, y)
 		}
 	}

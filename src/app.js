@@ -7,6 +7,7 @@ import {
 } from 'excalibur';
 import { Menu } from './scenes/Menu'
 import { World } from './scenes/World'
+import loader from './resources';
 
 document.write(/*html*/`
 <style>
@@ -29,11 +30,13 @@ document.write(/*html*/`
 
 `);
 
+
 const game = new Engine({
   // displayMode: ex.DisplayMode.Container,
   width: 800,
   height: 600,
-  backgroundColor: Color.Black
+  backgroundColor: Color.Black,
+	suppressPlayButton: true
 });
 
 game.setAntialiasing(false);
@@ -51,15 +54,11 @@ menu.on('connect', (evt) => {
 
 game.addScene('menu', menu);
 game.addScene('world', world);
+global.game = game;
 
 
-
-
-
-
-
-
-
-
-game.start();
+// game._suppressPlayButton
+game.start(loader).then(_ => {
+	
+});
 game.goToScene('menu');

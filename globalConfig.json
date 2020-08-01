@@ -1,0 +1,9 @@
+{
+	"chunk": {
+		"SIZE": 64,
+		"HEIGHT": 8
+	},
+	"block": {
+		"SIZE": 8
+	}
+}
